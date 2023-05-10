@@ -24,6 +24,7 @@ app.use(cors())
 
 // Routes
 app.use("/api/user", require("./routes/userRoutes"))
+app.use("/api/course", require("./routes/courseRoutes"))
 
 // Listen Port
 const port = process.env.PORT || 8080
