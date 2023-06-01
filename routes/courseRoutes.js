@@ -1,15 +1,17 @@
-// Importing necessary libraries and classes
-const express = require("express")
-const {addCourse, getCourses} = require("../controllers/courseController")
+const express = require("express");
+const { importCSV, addCourse, getCourses, dropCourse } = require("../controllers/courseController");
+const Course = require("../models/courseModel");
+const router = express.Router();
 
-// Router object
-const router = express.Router()
+// IMPORT COURSES | POST
+router.post("/importCSV", importCSV);
 
-// ADD NEW COURSE | POST  
-router.post("/addCourse", addCourse)
+// ADD NEW COURSE | POST
+router.post("/addCourse", addCourse);
 
-// GET ALL COURSES | GET  
-router.get("/getCourses", getCourses)
+// GET ALL COURSES | GET
+router.get("/getCourses", getCourses);
 
-// Making our router accessible to other files
-module.exports = router
+// DROP COURSE | DELETE
+router.delete("/dropCourse/:code", dropCourse);
+module.exports = router;

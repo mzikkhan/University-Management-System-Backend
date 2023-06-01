@@ -1,36 +1,42 @@
 // Importing mongoose library to act as a frontend to work with MongoDB
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 // Creating the faculty schema
 const facultySchema = new mongoose.Schema({
-    name: {
+    FacultyName: {
         type: String,
         required: [true, "name is required"],
     },
-    designation: {
+    FacultyInitial: {
         type: String,
-        required: [true, "designation is required"],
+        required: [true, "initial is required"],
     },
-    email: {
+    Courses: {
+        type: [String],
+        required: [true, "courses is required"],
+    },
+    Email: {
         type: String,
-        required: [true, "email is required"],
+        required: [true, "e-mail is required"],
     },
-    extension: {
+    EXT: {
         type: Number,
         required: [true, "ext is required"],
     },
-    room: {
+    Room: {
         type: String,
         required: [true, "room number is required"],
     },
-    mobile: {
+    Mobile: {
         type: Number,
         required: [true, "mobile number is required"],
     },
-})
+});
 
 // Establishing link between our model and our collection in MongoDB
-const facultyModel = mongoose.model("faculties", facultySchema)
+const facultyModel = mongoose.model("faculties", facultySchema);
 
 // Making our model available to other files
-module.exports = facultyModel
+module.exports = facultyModel;
+
+

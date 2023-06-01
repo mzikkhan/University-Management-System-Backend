@@ -12,7 +12,7 @@ const courseSchema = new mongoose.Schema({
         required: [true, "title is required"],
     },
     credits: {
-        type: Number,
+        type: String,
         required: [true, "credits is required"],
     },
     type: {
@@ -23,9 +23,10 @@ const courseSchema = new mongoose.Schema({
         type: String,
     },
     sections: {
-        type: Array,
+        type: [String],
     },
-})
+}, { timestamps: true });
+
 
 // Establishing link between our model and our collection in MongoDB
 const courseModel = mongoose.model("courses", courseSchema)
