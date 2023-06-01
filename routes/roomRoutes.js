@@ -14,8 +14,7 @@ router.get('/getRooms', getRooms);
 // Route for dropping a room by RoomNumber
 router.delete('/dropRoom/:Rooms', dropRoom);
 
-// Route for updating a room by Rooms
+// Route for updating a room by Room ID
 router.put('/updateRoom/:Rooms', updateRoom);
 
 module.exports = router;
-

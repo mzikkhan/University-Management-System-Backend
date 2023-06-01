@@ -87,11 +87,15 @@ const addRoom = async (req, res) => {
 // Get rooms by AssignFor and return only Rooms
 const getRooms = async (req, res) => {
     try {
-        const { AssignFor } = req.query;
+        const { AssignFor, Rooms } = req.query;
         let query = {};
 
         if (AssignFor) {
-            query = { AssignFor };
+            query.AssignFor = AssignFor;
+        }
+
+        if (Rooms) {
+            query.Rooms = { $regex: Rooms, $options: 'i' };
         }
 
         const rooms = await roomModel.find(query);
@@ -102,10 +106,8 @@ const getRooms = async (req, res) => {
                 success: false,
             });
         } else {
-            if (AssignFor && AssignFor.toLowerCase() === 'faculty'
-                || AssignFor && AssignFor.toLowerCase() === 'academic classes'
-                || AssignFor && AssignFor.toLowerCase() === 'others') {
-                const roomNames = rooms.map(room => room.Rooms); // Extract the Rooms field from each room object
+            if (AssignFor && (AssignFor.toLowerCase() === 'faculty' || AssignFor.toLowerCase() === 'academic classes' || AssignFor.toLowerCase() === 'others')) {
+                const roomNames = rooms.map((room) => room.Rooms); // Extract the Rooms field from each room object
                 res.status(200).send({
                     success: true,
                     details: roomNames,
@@ -125,6 +127,8 @@ const getRooms = async (req, res) => {
 
 
 
+
+
 // Drop a room by Room Name
 const dropRoom = async (req, res) => {
     try {
@@ -137,26 +141,27 @@ const dropRoom = async (req, res) => {
         res.status(500).json({ message: 'Error dropping room' });
     }
 };
-// Update a room by Room Name
+
 const updateRoom = async (req, res) => {
     try {
-        const Rooms = req.params.Rooms;
+        const rooms = req.params.Rooms;
         const updatedRoom = req.body;
 
-        const existingRoom = await roomModel.findOne({ Rooms: Rooms });
+        const room = await roomModel.findOneAndUpdate({ Rooms: rooms }, updatedRoom, { new: true });
 
-        if (!existingRoom) {
+        if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
 
-        await roomModel.updateOne({ Rooms: Rooms }, updatedRoom);
-        const rooms = await roomModel.find();
-        res.status(200).json({ message: 'Room updated successfully', details: rooms });
-    } catch (err) {
-        console.error(err);
+        res.status(200).json(room);
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Error updating room' });
     }
 };
 
 module.exports = { importCSV, addRoom, getRooms, dropRoom, updateRoom };
+
+
+
 
