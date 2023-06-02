@@ -87,7 +87,7 @@ const addRoom = async (req, res) => {
 // Get rooms by AssignFor and return only Rooms
 const getRooms = async (req, res) => {
     try {
-        const { AssignFor, Rooms } = req.query;
+        const { AssignFor, Rooms, roomNameForTimeSlot } = req.query;
         let query = {};
 
         if (AssignFor) {
@@ -95,7 +95,7 @@ const getRooms = async (req, res) => {
         }
 
         if (Rooms) {
-            query.Rooms = { $regex: Rooms, $options: 'i' };
+            query.Rooms = Rooms;
         }
 
         const rooms = await roomModel.find(query);
@@ -106,12 +106,31 @@ const getRooms = async (req, res) => {
                 success: false,
             });
         } else {
-            if (AssignFor && (AssignFor.toLowerCase() === 'faculty' || AssignFor.toLowerCase() === 'academic classes' || AssignFor.toLowerCase() === 'others')) {
+            if (
+                AssignFor &&
+                (AssignFor.toLowerCase() === 'faculty' ||
+                    AssignFor.toLowerCase() === 'academic classes' ||
+                    AssignFor.toLowerCase() === 'academic labs' ||
+                    AssignFor.toLowerCase() === 'others')
+            ) {
                 const roomNames = rooms.map((room) => room.Rooms); // Extract the Rooms field from each room object
                 res.status(200).send({
                     success: true,
                     details: roomNames,
                 });
+            } else if (roomNameForTimeSlot) {
+                const room = rooms.find((room) => room.Rooms === roomNameForTimeSlot);
+                if (room) {
+                    res.status(200).send({
+                        success: true,
+                        details: room.TimeSlot,
+                    });
+                } else {
+                    res.status(200).send({
+                        message: 'Room not found',
+                        success: false,
+                    });
+                }
             } else {
                 res.status(200).send({
                     success: true,
@@ -125,7 +144,9 @@ const getRooms = async (req, res) => {
     }
 };
 
-
+module.exports = {
+    getRooms,
+};
 
 
 
@@ -142,7 +163,7 @@ const dropRoom = async (req, res) => {
     }
 };
 
-const updateRoom = async (req, res) => {
+const updateRooms = async (req, res) => {
     try {
         const rooms = req.params.Rooms;
         const updatedRoom = req.body;
@@ -160,7 +181,7 @@ const updateRoom = async (req, res) => {
     }
 };
 
-module.exports = { importCSV, addRoom, getRooms, dropRoom, updateRoom };
+module.exports = { importCSV, addRoom, getRooms, dropRoom, updateRooms };
 
 
 

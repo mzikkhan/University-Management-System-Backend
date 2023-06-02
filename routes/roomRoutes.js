@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { importCSV, addRoom, getRooms, dropRoom, updateRoom } = require('../controllers/roomController');
+const { importCSV, addRoom, getRooms, dropRoom, updateRooms } = require('../controllers/roomController');
 
 // Route for importing new rooms from CSV file
 router.post("/importCSV", importCSV);
@@ -15,6 +15,6 @@ router.get('/getRooms', getRooms);
 router.delete('/dropRoom/:Rooms', dropRoom);
 
 // Route for updating a room by Room ID
-router.put('/updateRoom/:Rooms', updateRoom);
+router.put('/updateRooms/:Rooms', updateRooms);
 
 module.exports = router;
