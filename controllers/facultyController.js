@@ -21,46 +21,63 @@ const addFaculty = async (req, res) => {
 // Get All faculties
 const getFaculties = async (req, res) => {
     try {
-        const { FacultyName, FacultyInitial } = req.query;
+        const { FacultyName, FacultyInitial, wishCourses } = req.query;
         let faculties;
+
         if (FacultyInitial && FacultyName) {
             faculties = await facultyModel.find({ FacultyInitial, FacultyName: { $regex: new RegExp(`^${FacultyName}$`, "i") } });
         } else if (FacultyInitial) {
             faculties = await facultyModel.find({ FacultyInitial });
         } else if (FacultyName) {
             faculties = await facultyModel.find({ FacultyName: { $regex: new RegExp(`^${FacultyName}$`, "i") } });
+        } else if (wishCourses) {
+            faculties = await facultyModel.find({ Courses: wishCourses });
         } else {
-            faculties = await facultyModel.find()
+            faculties = await facultyModel.find();
         }
-        if (!faculties) {
+
+        if (!faculties || faculties.length === 0) {
             return res.status(200).send({
-                message: "no faculties found",
+                message: "No faculties found",
                 success: false,
-            })
-        } else {
-            const facultiesDetails = [];
-            for (const element of faculties) {
-                detail = {};
-                detail['FacultyName'] = element['FacultyName'];
-                detail['FacultyInitial'] = element['FacultyInitial'];
-                detail['Courses'] = element['Courses'];
-                detail['Email'] = element['Email'];
-                detail['EXT'] = element['EXT'];
-                detail['Room'] = element['Room'];
-                detail['Mobile'] = element['Mobile'];
-                facultiesDetails.push(detail);
+            });
+        } else if (wishCourses) {
+            const matchingFaculties = faculties.filter(faculty => faculty.Courses.includes(wishCourses));
+            if (matchingFaculties.length > 0) {
+                const facultyInitials = matchingFaculties.map(faculty => faculty.FacultyInitial);
+                res.status(200).send({
+                    success: true,
+                    details: facultyInitials,
+                });
+            } else {
+                res.status(200).send({
+                    message: 'No faculties found for the specified course',
+                    success: false,
+                });
             }
+        } else {
+            const facultiesDetails = faculties.map(element => ({
+                FacultyName: element.FacultyName,
+                FacultyInitial: element.FacultyInitial,
+                Courses: element.Courses,
+                Email: element.Email,
+                EXT: element.EXT,
+                Room: element.Room,
+                Mobile: element.Mobile
+            }));
 
             res.status(200).send({
                 success: true,
                 details: facultiesDetails,
             });
         }
+
     } catch (error) {
-        console.log(error)
-        res.status(500).send({ message: `${error.message}` })
+        console.log(error);
+        res.status(500).send({ message: `${error.message}` });
     }
-}
+};
+
 
 // Drop Faculty by FacultyName
 const dropFaculty = async (req, res) => {

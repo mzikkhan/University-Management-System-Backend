@@ -1,5 +1,5 @@
 const express = require("express");
-const { importCSV, addCourse, getCourses, dropCourse } = require("../controllers/courseController");
+const { importCSV, addCourse, getCourses, dropCourse, updateCourse } = require("../controllers/courseController");
 const Course = require("../models/courseModel");
 const router = express.Router();
 
@@ -12,6 +12,10 @@ router.post("/addCourse", addCourse);
 // GET ALL COURSES | GET
 router.get("/getCourses", getCourses);
 
+// UPDATE COURSE | PUT
+router.put("/updateCourse/:code", updateCourse);
+
 // DROP COURSE | DELETE
 router.delete("/dropCourse/:code", dropCourse);
+
 module.exports = router;

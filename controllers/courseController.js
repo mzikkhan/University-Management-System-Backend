@@ -120,4 +120,38 @@ const dropCourse = async (req, res) => {
         res.status(500).json({ message: "Error dropping course" });
     }
 };
-module.exports = { importCSV, addCourse, getCourses, dropCourse }
+// Update course by code
+const updateCourse = async (req, res) => {
+    try {
+        const code = req.params.code;
+        const updatedCourse = req.body;
+
+        const existingCourse = await courseModel.findOne({ code });
+        if (!existingCourse) {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
+
+        const updatedFields = {
+            ...existingCourse.toObject(),
+            ...updatedCourse
+        };
+
+        const result = await courseModel.updateOne({ code }, updatedFields);
+
+        if (result.matchedCount > 0) {
+            if (result.modifiedCount > 0) {
+                return res.status(200).json({ message: "Course updated successfully", success: true });
+            } else {
+                return res.status(200).json({ message: "No changes made to the course", success: false });
+            }
+        } else {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: `Error updating course: ${error.message}`, success: false });
+    }
+};
+
+module.exports = { importCSV, addCourse, getCourses, dropCourse, updateCourse };

@@ -27,6 +27,7 @@ app.use("/api/user", require("./routes/userRoutes"))
 app.use("/api/course", require("./routes/courseRoutes"))
 app.use("/api/faculties", require("./routes/facultyRoutes"))
 app.use("/api/rooms", require("./routes/roomRoutes"))
+app.use("/api/sections", require("./routes/sectionRoutes"))
 // Listen Port
 const port = process.env.PORT || 8080
 app.listen(port, () => {
