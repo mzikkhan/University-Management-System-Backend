@@ -12,8 +12,6 @@ router.post("/addFaculty", addFaculty);
 // GET ALL Faculty | GET
 router.get("/getFaculties", getFaculties);
 
-
-
 // DROP FACULTY | DELETE
 router.delete("/dropFaculty/:FacultyInitial", dropFaculty);
 // Making our router accessible to other files

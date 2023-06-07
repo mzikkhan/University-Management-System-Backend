@@ -21,26 +21,56 @@ const addFaculty = async (req, res) => {
 // Get All faculties
 const getFaculties = async (req, res) => {
     try {
-        const { FacultyName, FacultyInitial, wishCourses } = req.query;
-        let faculties;
+        const { FacultyName, FacultyInitial, wishCourses, preferredDaysFor, creditCountFor } = req.query;
 
-        if (FacultyInitial && FacultyName) {
-            faculties = await facultyModel.find({ FacultyInitial, FacultyName: { $regex: new RegExp(`^${FacultyName}$`, "i") } });
-        } else if (FacultyInitial) {
-            faculties = await facultyModel.find({ FacultyInitial });
-        } else if (FacultyName) {
-            faculties = await facultyModel.find({ FacultyName: { $regex: new RegExp(`^${FacultyName}$`, "i") } });
-        } else if (wishCourses) {
-            faculties = await facultyModel.find({ Courses: wishCourses });
-        } else {
-            faculties = await facultyModel.find();
+        const query = {};
+
+        if (FacultyInitial) {
+            query.FacultyInitial = FacultyInitial;
         }
+
+        if (FacultyName) {
+            query.FacultyName = { $regex: new RegExp(`^${FacultyName}$`, "i") };
+        }
+
+        if (wishCourses) {
+            query.Courses = wishCourses;
+        }
+
+        const faculties = await facultyModel.find(query);
 
         if (!faculties || faculties.length === 0) {
             return res.status(200).send({
                 message: "No faculties found",
                 success: false,
             });
+        }
+        if (creditCountFor) {
+            const faculty = await facultyModel.findOne({ FacultyInitial: creditCountFor });
+            if (faculty) {
+                res.status(200).send({
+                    success: true,
+                    details: faculty.CreditCount,
+                });
+            } else {
+                res.status(200).send({
+                    message: 'Faculty not found',
+                    success: false,
+                });
+            }
+        } else if (preferredDaysFor) {
+            const faculty = await facultyModel.findOne({ FacultyInitial: preferredDaysFor });
+            if (faculty) {
+                res.status(200).send({
+                    success: true,
+                    details: faculty.PreferredDays,
+                });
+            } else {
+                res.status(200).send({
+                    message: 'Faculty not found',
+                    success: false,
+                });
+            }
         } else if (wishCourses) {
             const matchingFaculties = faculties.filter(faculty => faculty.Courses.includes(wishCourses));
             if (matchingFaculties.length > 0) {
@@ -63,7 +93,10 @@ const getFaculties = async (req, res) => {
                 Email: element.Email,
                 EXT: element.EXT,
                 Room: element.Room,
-                Mobile: element.Mobile
+                Mobile: element.Mobile,
+                OfficeHour: element.OfficeHour,
+                PreferredDays: element.PreferredDays,
+                CreditCount: element.CreditCount
             }));
 
             res.status(200).send({
@@ -71,13 +104,11 @@ const getFaculties = async (req, res) => {
                 details: facultiesDetails,
             });
         }
-
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: `${error.message}` });
     }
 };
-
 
 // Drop Faculty by FacultyName
 const dropFaculty = async (req, res) => {

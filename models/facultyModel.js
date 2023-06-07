@@ -31,6 +31,17 @@ const facultySchema = new mongoose.Schema({
         type: Number,
         required: [true, "mobile number is required"],
     },
+    OfficeHour: {
+        type: [String],
+        required: [true, "OfficeHour is required"],
+    },
+    PreferredDays: {
+        type: [String],
+        required: [true, "PreferredDays is required"],
+    },
+    CreditCount: {
+        type: String,
+    },
 });
 
 // Establishing link between our model and our collection in MongoDB

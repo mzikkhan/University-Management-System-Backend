@@ -69,22 +69,45 @@ const addCourse = async (req, res) => {
 const getCourses = async (req, res) => {
     try {
         const { code, title } = req.query;
+        const { codes } = req.params; // Extract the 'codes' parameter from the URL
+
         let courses;
         if (code && title) {
             courses = await courseModel.find({ code, title: { $regex: new RegExp(`^${title}$`, "i") } });
         } else if (code) {
             courses = await courseModel.find({ code });
         } else if (title) {
-            courses = await courseModel.find({ title: { $regex: new RegExp(`^${title}$`, "i") } }); //The "i" flag stands for case-insensitive matching
+            courses = await courseModel.find({ title: { $regex: new RegExp(`^${title}$`, "i") } });
         } else {
             courses = await courseModel.find();
         }
+        // Find all courses and retrieve only the 'title' field
+        const courses2 = await courseModel.find({}, 'title');
+        // Send the response with the titles
+
+
+
         if (!courses || courses.length === 0) {
             return res.status(200).send({
                 message: "no courses",
                 success: false,
-            })
+            });
         } else {
+            if (codes && codes.toUpperCase() === "CODES") {
+                const courseCodes = courses.map(element => element.code);
+                return res.status(200).send({
+                    success: true,
+                    codes: courseCodes,
+                });
+            }
+            if (codes && codes.toUpperCase() === "TITLES") {
+                // Extract the titles from the courses
+                const titles = courses2.map((course) => course.title);
+                return res.json({
+                    success: true,
+                    codes: titles,
+                });
+            }
             const courseDetails = courses.map(element => {
                 return {
                     code: element.code,
@@ -102,9 +125,10 @@ const getCourses = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.status(500).send({ message: `${error.message}` })
+        res.status(500).send({ message: `${error.message}` });
     }
-}
+};
+
 
 
 
