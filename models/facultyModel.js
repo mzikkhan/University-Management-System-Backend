@@ -42,6 +42,9 @@ const facultySchema = new mongoose.Schema({
     CreditCount: {
         type: String,
     },
+    Image: {
+        type: String,
+    }
 });
 
 // Establishing link between our model and our collection in MongoDB

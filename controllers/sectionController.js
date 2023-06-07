@@ -51,6 +51,110 @@ const getSections = async (req, res) => {
     }
 };
 
+// Get all sections || GET
+const getAllSections = async (req, res) => {
+    try {
+        const sections = await sectionModel.find()
+        if (!sections) {
+            return res.status(200).send({
+                message: "No sections",
+                success: false,
+            })
+        } else {
+            const sectionDetails = [];
+            for (const element of sections) {
+                detail = {};
+                detail['Course'] = element['Course'];
+                detail['SectionNumber'] = element['SectionNumber'];
+                detail['FacultyInitial'] = element['FacultyInitial'];
+                detail['TimeSlot'] = element['TimeSlot'];
+                detail['Room'] = element['Room'];
+                sectionDetails.push(detail);
+            }
+
+            res.status(200).send({
+                success: true,
+                details: sectionDetails,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: `Error: ${error.message}` });
+    }
+}
+// Get sections by Course and return those sections only || GET
+const getSectionsForCourse = async (req, res, next) => {
+    try {
+        const code = req.params.code;
+        const sections = await sectionModel.find({ Course: code })
+        res.status(200).json(sections);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error finding course" });
+    }
+};
+
+// Get a section by Course and SectionNumber || GET
+const getSectionByCodeAndNumber = async (req, res) => {
+    try {
+        const { code, number } = req.params;
+        const section = await sectionModel.findOne({ Course: code, SectionNumber: number });
+
+        if (!section) {
+            return res.status(404).json({ message: 'Section not found' });
+        }
+
+        res.status(200).json(section);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error finding section' });
+    }
+};
+
+
+// Drop a section by Course and SectionNumber || DELETE
+const dropSection = async (req, res) => {
+    try {
+        const { code, number } = req.params;
+        const section = await sectionModel.findOneAndDelete({ Course: code, SectionNumber: number });
+
+        if (!section) {
+            return res.status(404).json({ message: 'Section not found' });
+        }
+
+        res.status(200).json(section);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error dropping section' });
+    }
+};
+
+// Update a section by Course and SectionNumber || PUT
+const updateSection = async (req, res) => {
+    try {
+        const { code, number } = req.params;
+        const updateData = req.body;
+
+        const section = await sectionModel.findOneAndUpdate({ Course: code, SectionNumber: number }, updateData, { new: true });
+
+        if (!section) {
+            return res.status(404).json({ message: 'Section not found' });
+        }
+
+        res.status(200).json(section);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating section' });
+    }
+};
 
 // Export the controller functions
-module.exports = { addSection, getSections };
+module.exports = {
+    addSection,
+    getSections,
+    getAllSections,
+    getSectionsForCourse,
+    getSectionByCodeAndNumber,
+    dropSection,
+    updateSection
+};

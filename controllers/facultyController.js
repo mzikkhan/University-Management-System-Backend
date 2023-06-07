@@ -21,7 +21,7 @@ const addFaculty = async (req, res) => {
 // Get All faculties
 const getFaculties = async (req, res) => {
     try {
-        const { FacultyName, FacultyInitial, wishCourses, preferredDaysFor, creditCountFor } = req.query;
+        const { FacultyName, FacultyInitial, FacultyEmail, FacultyEXT, FacultyRoom, FacultyMobile, wishCourses, preferredDaysFor, creditCountFor } = req.query;
 
         const query = {};
 
@@ -35,6 +35,22 @@ const getFaculties = async (req, res) => {
 
         if (wishCourses) {
             query.Courses = wishCourses;
+        }
+
+        if (FacultyEXT) {
+            query.EXT = FacultyEXT;
+        }
+
+        if (FacultyRoom) {
+            query.Room = FacultyRoom
+        }
+
+        if (FacultyMobile) {
+            query.Mobile = FacultyMobile;
+        }
+
+        if (FacultyEmail) {
+            query.Email = FacultyEmail;
         }
 
         const faculties = await facultyModel.find(query);
@@ -96,7 +112,8 @@ const getFaculties = async (req, res) => {
                 Mobile: element.Mobile,
                 OfficeHour: element.OfficeHour,
                 PreferredDays: element.PreferredDays,
-                CreditCount: element.CreditCount
+                CreditCount: element.CreditCount,
+                Image: element.Image
             }));
 
             res.status(200).send({
