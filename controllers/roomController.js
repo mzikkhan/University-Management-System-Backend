@@ -181,7 +181,19 @@ const updateRooms = async (req, res) => {
     }
 };
 
-module.exports = { importCSV, addRoom, getRooms, dropRoom, updateRooms };
+// Get room routine
+const roomRoutine = async (req, res) => {
+    try {
+        const room = await roomModel.findById(req.params.id)
+        res.status(200).json(room.TimeSlot)
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: `${error.message}` });
+    }
+};
+
+module.exports = { importCSV, addRoom, getRooms, dropRoom, updateRooms, roomRoutine };
 
 
 

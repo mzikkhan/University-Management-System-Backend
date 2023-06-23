@@ -1,6 +1,6 @@
 // Importing necessary libraries and classes
 const express = require("express");
-const { addFaculty, getFaculties, dropFaculty, updateCreditCount } = require("../controllers/facultyController");
+const { addFaculty, getFaculties, dropFaculty, updateCreditCount, facultyRoutine } = require("../controllers/facultyController");
 
 
 // Router object
@@ -11,6 +11,9 @@ router.post("/addFaculty", addFaculty);
 
 // GET ALL Faculty | GET
 router.get("/getFaculties", getFaculties);
+
+// Route for getting faculty routine
+router.get('/getRoutine/:id', facultyRoutine);
 
 // DROP FACULTY | DELETE
 router.delete("/dropFaculty/:FacultyInitial", dropFaculty);
