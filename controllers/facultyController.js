@@ -1,5 +1,6 @@
 // Importing required libraries and classes
 const facultyModel = require('../models/facultyModel')
+const sectionModel = require('../models/sectionModel');
 
 // Add a new faculty
 const addFaculty = async (req, res) => {
@@ -168,4 +169,17 @@ const updateCreditCount = async (req, res) => {
     }
 };
 
-module.exports = { addFaculty, getFaculties, dropFaculty, updateCreditCount }
+// Get faculty routine
+const facultyRoutine = async (req, res) => {
+    try {
+        // const faculty = await facultyModel.findOne({ FacultyInitial: req.params.id });
+        const sections = await sectionModel.find({ FacultyInitial: req.params.id })
+        res.status(200).json(sections)
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: `${error.message}` });
+    }
+};
+
+module.exports = { addFaculty, getFaculties, dropFaculty, updateCreditCount, facultyRoutine }
