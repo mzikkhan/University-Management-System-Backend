@@ -1,5 +1,5 @@
 const express = require("express");
-const { importCSV, addCourse, getCourses, dropCourse, updateCourse, dropSectionByCodeAndSection, getCreditsByCode } = require("../controllers/courseController");
+const { importCSV, addCourse, getCourses, dropCourse, updateCourse, dropSectionByCodeAndSection, getCreditsByCode, courseRoutine } = require("../controllers/courseController");
 const Course = require("../models/courseModel");
 const router = express.Router();
 
@@ -22,4 +22,8 @@ router.delete("/dropCourse/:code", dropCourse);
 router.delete("/dropSection", dropSectionByCodeAndSection);
 // GET CREDITS BY CODE | GET
 router.get("/getCredits/:code", getCreditsByCode);
+
+// Route for getting course routine
+router.get('/getRoutine/:id', courseRoutine);
+
 module.exports = router;

@@ -1,6 +1,7 @@
 // Importing required libraries and classes
 const courseModel = require('../models/courseModel')
 const csvtoJson = require("csvtojson");
+const sectionModel = require('../models/sectionModel');
 const _ = require('lodash');
 
 // Import courses from CSV file
@@ -221,4 +222,17 @@ const getCreditsByCode = async (req, res) => {
         res.status(500).json({ message: `Error retrieving credits: ${error.message}`, success: false });
     }
 };
-module.exports = { importCSV, addCourse, getCourses, dropCourse, updateCourse, dropSectionByCodeAndSection, getCreditsByCode };
+
+// Get course routine
+const courseRoutine = async (req, res) => {
+    try {
+        const sections = await sectionModel.find({ Course: req.params.id })
+        res.status(200).json(sections)
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: `${error.message}` });
+    }
+};
+
+module.exports = { importCSV, addCourse, getCourses, dropCourse, updateCourse, dropSectionByCodeAndSection, getCreditsByCode, courseRoutine };
