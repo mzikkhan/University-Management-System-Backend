@@ -11,6 +11,7 @@ router.get('/getSections', getSections);
 
 // Route for getting all Section
 router.get('/getAllSections', getAllSections);
+
 // Route for dropping a section by CourseCode and CourseSectionNumber || DELETE
 router.delete('/dropSection/:code/:number', dropSection);
 
