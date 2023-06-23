@@ -1,6 +1,6 @@
 // Importing necessary libraries and classes
 const express = require("express");
-const { addFaculty, getFaculties, dropFaculty } = require("../controllers/facultyController");
+const { addFaculty, getFaculties, dropFaculty, updateCreditCount } = require("../controllers/facultyController");
 
 
 // Router object
@@ -14,5 +14,9 @@ router.get("/getFaculties", getFaculties);
 
 // DROP FACULTY | DELETE
 router.delete("/dropFaculty/:FacultyInitial", dropFaculty);
+
+// UPDATE CreditCount | PUT
+router.put("/updateCreditCount", updateCreditCount);
+
 // Making our router accessible to other files
 module.exports = router;

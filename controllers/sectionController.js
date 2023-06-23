@@ -148,6 +148,43 @@ const updateSection = async (req, res) => {
     }
 };
 
+// Drop all sections by CourseCode || DELETE
+const dropSectionByCourseCode = async (req, res) => {
+    try {
+        const code = req.params.code;
+
+        // Find and delete all sections with the given Course code
+        const deletedSections = await sectionModel.deleteMany({ Course: code });
+
+        if (deletedSections.deletedCount === 0) {
+            return res.status(404).json({ message: 'No sections found with the given Course code' });
+        }
+
+        res.status(200).json({ message: 'Sections deleted successfully', deletedCount: deletedSections.deletedCount });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error dropping sections' });
+    }
+};
+
+// Drop all sections by CourseCode || DELETE
+const dropSectionByFacultyInitial = async (req, res) => {
+    try {
+        const facultyInitial = req.params.facultyInitial;
+
+        // Find and delete all sections with the given Course code
+        const deletedSections = await sectionModel.deleteMany({ FacultyInitial: facultyInitial });
+
+        if (deletedSections.deletedCount === 0) {
+            return res.status(404).json({ message: 'No sections found with the given FacultyInitial' });
+        }
+
+        res.status(200).json({ message: 'Sections deleted successfully', deletedCount: deletedSections.deletedCount });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error dropping sections' });
+    }
+};
 // Export the controller functions
 module.exports = {
     addSection,
@@ -156,5 +193,7 @@ module.exports = {
     getSectionsForCourse,
     getSectionByCodeAndNumber,
     dropSection,
-    updateSection
+    updateSection,
+    dropSectionByCourseCode,
+    dropSectionByFacultyInitial
 };

@@ -140,4 +140,32 @@ const dropFaculty = async (req, res) => {
     }
 };
 
-module.exports = { addFaculty, getFaculties, dropFaculty }
+// Update CreditCount for a faculty
+const updateCreditCount = async (req, res) => {
+    try {
+        const facultyInitial = req.query.FacultyInitial;
+        const newCreditCount = req.query.CreditCount;
+
+        // Find the faculty by facultyInitial
+        const faculty = await facultyModel.findOne({ FacultyInitial: facultyInitial });
+
+        if (!faculty) {
+            return res.status(404).json({ message: 'Faculty not found', success: false });
+        }
+
+        // Update the CreditCount
+        faculty.CreditCount = newCreditCount;
+        await faculty.save();
+
+        res.status(200).json({
+            message: 'CreditCount updated successfully',
+            success: true,
+            details: faculty.CreditCount,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: `Error updating CreditCount: ${error.message}` });
+    }
+};
+
+module.exports = { addFaculty, getFaculties, dropFaculty, updateCreditCount }

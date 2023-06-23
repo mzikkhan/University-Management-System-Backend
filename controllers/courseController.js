@@ -129,6 +129,32 @@ const getCourses = async (req, res) => {
     }
 };
 
+// Drop section from course by code and section
+const dropSectionByCodeAndSection = async (req, res) => {
+    try {
+        const { CourseCode, Section } = req.query;
+
+        const existingCourse = await courseModel.findOne({ code: CourseCode });
+        if (!existingCourse) {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
+
+        const updatedSections = existingCourse.sections.filter(sec => sec !== Section);
+        existingCourse.sections = updatedSections;
+
+        const result = await existingCourse.save();
+
+        if (result) {
+            return res.status(200).json({ message: "Section dropped successfully", success: true });
+        } else {
+            return res.status(500).json({ message: "Error dropping section", success: false });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: `Error dropping section: ${error.message}`, success: false });
+    }
+};
 
 
 
@@ -177,5 +203,22 @@ const updateCourse = async (req, res) => {
         res.status(500).json({ message: `Error updating course: ${error.message}`, success: false });
     }
 };
+// Get credits by code
+const getCreditsByCode = async (req, res) => {
+    try {
+        const code = req.params.code;
 
-module.exports = { importCSV, addCourse, getCourses, dropCourse, updateCourse };
+        const course = await courseModel.findOne({ code });
+        if (!course) {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
+
+        const credits = course.credits;
+
+        res.status(200).json({ credits, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: `Error retrieving credits: ${error.message}`, success: false });
+    }
+};
+module.exports = { importCSV, addCourse, getCourses, dropCourse, updateCourse, dropSectionByCodeAndSection, getCreditsByCode };

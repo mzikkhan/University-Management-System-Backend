@@ -40,7 +40,8 @@ const facultySchema = new mongoose.Schema({
         required: [true, "PreferredDays is required"],
     },
     CreditCount: {
-        type: String,
+        type: Number,
+        precision: 1,
     },
     Image: {
         type: String,

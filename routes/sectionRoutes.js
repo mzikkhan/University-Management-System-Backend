@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { addSection, getSections, getAllSections, getSectionsForCourse, getSectionByCodeAndNumber, dropSection, updateSection } = require('../controllers/sectionController');
+const { addSection, getSections, getAllSections, getSectionsForCourse,
+    getSectionByCodeAndNumber, dropSection, updateSection,
+    dropSectionByCourseCode, dropSectionByFacultyInitial } = require('../controllers/sectionController');
 // Route for adding a new Section
 router.post('/addSection', addSection);
 
@@ -20,5 +22,11 @@ router.get("/getSectionsForCourse/:code", getSectionsForCourse);
 
 // Get section by CourseCode and CourseSectionNumber || GET
 router.get("/getSectionByCodeAndNumber/:code/:number", getSectionByCodeAndNumber);
+
+// Route for dropping sections by CourseCode || DELETE
+router.delete('/dropSectionByCourseCode/:code', dropSectionByCourseCode);
+
+// Route for dropping sections by FacultyInitial || DELETE
+router.delete('/dropSectionByFacultyInitial/:facultyInitial', dropSectionByFacultyInitial);
 
 module.exports = router;
