@@ -127,6 +127,8 @@ const getFaculties = async (req, res) => {
     }
 };
 
+
+
 // Drop Faculty by FacultyName
 const dropFaculty = async (req, res) => {
     try {
@@ -168,4 +170,62 @@ const updateCreditCount = async (req, res) => {
     }
 };
 
-module.exports = { addFaculty, getFaculties, dropFaculty, updateCreditCount }
+// Update faculty by FacultyInitial
+const updateFaculty = async (req, res) => {
+    try {
+        const facultyInitial = req.params.FacultyInitial;
+        const updateData = req.body;
+
+        // Find the faculty by facultyInitial
+        const faculty = await facultyModel.findOne({ FacultyInitial: facultyInitial });
+
+        if (!faculty) {
+            return res.status(404).json({ message: 'Faculty not found', success: false });
+        }
+
+        // Update the faculty data
+        faculty.set(updateData);
+        const updatedFaculty = await faculty.save();
+
+        res.status(200).json({
+            message: 'Faculty updated successfully',
+            success: true,
+            details: updatedFaculty,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: `Error updating faculty: ${error.message}` });
+    }
+};
+
+// Get faculty by FacultyInitial
+const getFacultyByInitial = async (req, res) => {
+    try {
+        const facultyInitial = req.params.FacultyInitial;
+
+        // Find the faculty by facultyInitial
+        const faculty = await facultyModel.findOne({ FacultyInitial: facultyInitial });
+
+        if (!faculty) {
+            return res.status(404).json({ message: 'Faculty not found', success: false });
+        }
+
+        res.status(200).json({
+            success: true,
+            details: faculty,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: `Error getting faculty: ${error.message}` });
+    }
+};
+
+module.exports = {
+    addFaculty,
+    getFaculties,
+    dropFaculty,
+    updateCreditCount,
+    updateFaculty,
+    getFacultyByInitial // Add the new updateFaculty function to the exports
+};
+

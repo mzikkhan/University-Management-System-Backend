@@ -170,6 +170,7 @@ const dropCourse = async (req, res) => {
         res.status(500).json({ message: "Error dropping course" });
     }
 };
+
 // Update course by code
 const updateCourse = async (req, res) => {
     try {
@@ -203,6 +204,7 @@ const updateCourse = async (req, res) => {
         res.status(500).json({ message: `Error updating course: ${error.message}`, success: false });
     }
 };
+
 // Get credits by code
 const getCreditsByCode = async (req, res) => {
     try {
