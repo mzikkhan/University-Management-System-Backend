@@ -1,12 +1,50 @@
-# nsu-admin-backend
-CSE327 Project
+# University Management System
 
-This is the backend of our system - made using MongoDB, ExpressJS and NodeJS.
+This is the backend for the University Management System, built using NodeJS, ExpressJS, and MongoDB.
 
-# How To Run It
+## Features
 
-1. Install nodejs, expressjs and make account on mongodb
-2. Pull the code into a folder called 'backend'
-3. Type 'cd backend' into the terminal to navigate to directory containing pulled code
-4. Type 'npm i' into terminal to install dependencies
-5. Type 'npm run server' to start the backend server
+### Faculty Management
+
+- Add a faculty
+    - Name
+    - Initials
+    - Room Number
+    - Contact Number
+    - Courses Taken
+- Edit Faculty Information
+- Delete Faculty
+
+### Course Management
+
+- Add Course
+    - Course Code
+    - Course Name
+    - Credits
+    - Description
+- Edit Course Information
+- Delete Course
+
+### Course Section Management
+
+- Add Course Section
+    - Course Code and Name
+    - Time
+    - Room Number
+    - Faculty
+- Edit Course Section
+- Delete Course Section
+
+### Schedule Management
+
+- View Faculty Schedule
+- View Student Schedule
+- View Room Schedule
+
+### User Authentication
+
+- User Registration
+- User Login
+- Role-Based Access Control
+
+This project was completed for my university course CSE327: Software Engineering.
